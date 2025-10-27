@@ -121,7 +121,7 @@ curl -X GET 'https://api.example.com/budi'
 6.  Paste the following into the body:
     ```json
     {
-        "nama": "Budi Santoso (Updated)",
+        "nama": "Budi Santoso",
         "price": "Bandung"
     }
     ```
@@ -132,7 +132,7 @@ curl -X GET 'https://api.example.com/budi'
 curl -X PUT 'https://api.example.com/budi' \
 -H 'Content-Type: application/json' \
 -d '{
-    "nama": "Budi Santoso (Updated)",
+    "nama": "Budi Santoso",
     "price": "Bandung"
 }'
 ```
