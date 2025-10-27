@@ -18,7 +18,7 @@ This project consists of 5 Lambda functions:
 This is an example of how your API Gateway endpoints would be configured and how you can test them using Postman or `curl`.
 
 **Assumptions:**
-* Your API Gateway endpoint is: `https://api.example.com/items`
+* Your API Gateway endpoint is: `https://api.example.com`
 * The DynamoDB table's primary key is `id` (String).
 * The item we are working with has an `id` of `item-123`.
 
@@ -26,12 +26,12 @@ This is an example of how your API Gateway endpoints would be configured and how
 
 ### 1. Create (POST)
 
-* **Endpoint:** `POST /items`
+* **Endpoint:** `POST /`
 * **Action:** Creates a new item. The `id` and other attributes must be in the request body.
 
 #### Postman Test:
 1.  Set the method to **POST**.
-2.  Set the URL to: `https://api.example.com/items`
+2.  Set the URL to: `https://api.example.com`
 3.  Go to the **Body** tab.
 4.  Select **raw**.
 5.  Select **JSON** from the dropdown.
@@ -48,7 +48,7 @@ This is an example of how your API Gateway endpoints would be configured and how
 
 #### `curl` Test:
 ```bash
-curl -X POST '[https://api.example.com/items](https://api.example.com/items)' \
+curl -X POST ''https://api.example.com/{id}' \
 -H 'Content-Type: application/json' \
 -d '{
     "id": "item-123",
@@ -75,17 +75,17 @@ curl -X POST '[https://api.example.com/items](https://api.example.com/items)' \
 
 ### 2. Read (GET - Single Item)
 
-* **Endpoint:** `GET /items/{id}`
+* **Endpoint:** `GET /{id}`
 * **Action:** Retrieves a single item using the `id` from the URL path.
 
 #### Postman Test:
 1.  Set the method to **GET**.
-2.  Set the URL to: `https://api.example.com/items/item-123`
+2.  Set the URL to: `https://api.example.com/{id}`
 3.  Click **Send**.
 
 #### `curl` Test:
 ```bash
-curl -X GET '[https://api.example.com/items/item-123](https://api.example.com/items/item-123)'
+curl -X GET 'https://api.example.com/{id}'
 ```
 
 #### Success Response (200 OK):
@@ -109,12 +109,12 @@ curl -X GET '[https://api.example.com/items/item-123](https://api.example.com/it
 
 ### 3. Update (PUT)
 
-* **Endpoint:** `PUT /items/{id}`
+* **Endpoint:** `PUT /{id}`
 * **Action:** Updates specific attributes of an existing item. The attributes to update are in the request body. (Note: The provided Lambda code is a simple example that only updates `name` and `price`).
 
 #### Postman Test:
 1.  Set the method to **PUT**.
-2.  Set the URL to: `https://api.example.com/items/item-123`
+2.  Set the URL to: `https://api.example.com/{id}`
 3.  Go to the **Body** tab.
 4.  Select **raw**.
 5.  Select **JSON** from the dropdown.
@@ -129,7 +129,7 @@ curl -X GET '[https://api.example.com/items/item-123](https://api.example.com/it
 
 #### `curl` Test:
 ```bash
-curl -X PUT '[https://api.example.com/items/item-123](https://api.example.com/items/item-123)' \
+curl -X PUT 'https://api.example.com/{id}' \
 -H 'Content-Type: application/json' \
 -d '{
     "name": "Premium Blue Widget",
@@ -152,17 +152,17 @@ curl -X PUT '[https://api.example.com/items/item-123](https://api.example.com/it
 
 ### 4. Delete (DELETE)
 
-* **Endpoint:** `DELETE /items/{id}`
+* **Endpoint:** `DELETE /{id}`
 * **Action:** Deletes an item using the `id` from the URL path.
 
 #### Postman Test:
 1.  Set the method to **DELETE**.
-2.  Set the URL to: `https://api.example.com/items/item-123`
+2.  Set the URL to: `https://api.example.com/{id}`
 3.  Click **Send**.
 
 #### `curl` Test:
 ```bash
-curl -X DELETE '[https://api.example.com/items/item-123](https://api.example.com/items/item-123)'
+curl -X DELETE 'https://api.example.com/{id}'
 ```
 
 #### Success Response (200 OK):
@@ -176,18 +176,18 @@ curl -X DELETE '[https://api.example.com/items/item-123](https://api.example.com
 
 ### 5. List (GET - All Items)
 
-* **Endpoint:** `GET /items`
+* **Endpoint:** `GET /`
 * **Action:** Retrieves all items in the table.
 * **⚠️ Warning:** This uses a `Scan` operation, which is inefficient and costly for large tables. Use with caution in production.
 
 #### Postman Test:
 1.  Set the method to **GET**.
-2.  Set the URL to: `https://api.example.com/items`
+2.  Set the URL to: `https://api.example.com`
 3.  Click **Send**.
 
 #### `curl` Test:
 ```bash
-curl -X GET '[https://api.example.com/items](https://api.example.com/items)'
+curl -X GET 'https://api.example.com'
 ```
 
 #### Success Response (200 OK):
