@@ -23,14 +23,12 @@ def lambda_handler(event, context):
         # Load the request body, converting numbers to Decimal
         body = json.loads(event.get('body', '{}'), parse_float=decimal.Decimal)
         
-        # --- English Explanation ---
         # This is a simple example that *only* updates 'name' and 'price'.
         # A more complex function would dynamically build the UpdateExpression
         # based on the keys present in the 'body'.
         if 'name' not in body or 'price' not in body:
              return {'statusCode': 400, 'body': json.dumps({'message': 'Error: "name" and "price" are required in the body for update'})}
 
-        # --- English Explanation ---
         # 'UpdateItem' is the most complex operation.
         # - Key: Specifies *which* item to update.
         # - UpdateExpression: Tells DynamoDB *what* to do. "set #n = :n" means

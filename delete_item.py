@@ -12,7 +12,6 @@ def lambda_handler(event, context):
         # Get the 'id' from the URL path
         item_id = event['pathParameters']['id']
         
-        # --- English Explanation ---
         # Deletes the item corresponding to the primary key.
         # This operation is idempotent: running it multiple times on the
         # same 'id' will not cause an error (it just does nothing

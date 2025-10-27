@@ -17,18 +17,15 @@ table = dynamodb.Table(TABLE_NAME)
 
 def lambda_handler(event, context):
     try:
-        # --- English Explanation ---
         # Get the 'id' from the URL path.
         # Assumes API Gateway path is something like /items/{id}
         item_id = event['pathParameters']['id']
         
-        # --- English Explanation ---
         # Fetch the item from DynamoDB using its primary key.
         response = table.get_item(
             Key={'id': item_id}
         )
         
-        # --- English Explanation ---
         # The 'get_item' response will contain an 'Item' key if it was found.
         if 'Item' in response:
             # If found, return 200 OK with the item data.

@@ -21,7 +21,6 @@ table = dynamodb.Table(TABLE_NAME)
 
 def lambda_handler(event, context):
     try:
-        # --- English Explanation ---
         # 1. Load the request body (which is a JSON string) into a Python dictionary.
         # 2. 'parse_float=decimal.Decimal' is crucial. It tells json.loads()
         #    to convert any numbers (like 10.50) into a Decimal object,
@@ -37,7 +36,6 @@ def lambda_handler(event, context):
 
         item = body
         
-        # --- English Explanation ---
         # The put_item operation creates a new item or *replaces* an old item
         # entirely if the 'id' already exists.
         table.put_item(Item=item)

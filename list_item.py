@@ -17,7 +17,6 @@ table = dynamodb.Table(TABLE_NAME)
 
 def lambda_handler(event, context):
     try:
-        # --- English Explanation ---
         # WARNING: A 'scan' operation reads the *entire* table.
         # This can be very slow and expensive if your table has many items.
         # For production use, it is highly recommended to use 'query()'
