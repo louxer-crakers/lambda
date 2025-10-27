@@ -5,11 +5,11 @@ This project demonstrates a serverless CRUD (Create, Read, Update, Delete) backe
 The architecture follows a single-purpose function model, where each CRUD operation is handled by its own dedicated Lambda function. This approach provides better separation of concerns, easier maintenance, and more granular security and scaling.
 
 This project consists of 5 Lambda functions:
-1.  **Create:** Creates a new item in the DynamoDB table.
-2.  **Read:** Retrieves a single item by its `id`.
-3.  **List:** Retrieves all items from the table.
-4.  **Update:** Updates specific attributes of an existing item.
-5.  **Delete:** Deletes an item from the table.
+1.  **Create:** Creates a new friend item in the DynamoDB table.
+2.  **Read:** Retrieves a single friend by their `id`.
+3.  **List:** Retrieves all friends from the table.
+4.  **Update:** Updates specific attributes of an existing friend.
+5.  **Delete:** Deletes a friend from the table.
 
 ---
 
@@ -20,14 +20,14 @@ This is an example of how your API Gateway endpoints would be configured and how
 **Assumptions:**
 * Your API Gateway endpoint is: `https://api.example.com`
 * The DynamoDB table's primary key is `id` (String).
-* The item we are working with has an `id` of `item-123`.
+* We will use the friend's nickname (e.g., `budi`) as the unique `id`.
 
 ---
 
 ### 1. Create (POST)
 
 * **Endpoint:** `POST /`
-* **Action:** Creates a new item. The `id` and other attributes must be in the request body.
+* **Action:** Creates a new friend. The `id` (nickname) and other attributes must be in the request body.
 
 #### Postman Test:
 1.  Set the method to **POST**.
@@ -38,23 +38,23 @@ This is an example of how your API Gateway endpoints would be configured and how
 6.  Paste the following into the body:
     ```json
     {
-        "id": "item-123",
-        "name": "Blue Widget",
-        "price": 19.99,
-        "inStock": true
+        "id": "budi",
+        "nama_lengkap": "Budi Santoso",
+        "email": "budi@example.com",
+        "kota": "Jakarta"
     }
     ```
 7.  Click **Send**.
 
 #### `curl` Test:
 ```bash
-curl -X POST ''https://api.example.com/{id}' \
+curl -X POST 'https://api.example.com' \
 -H 'Content-Type: application/json' \
 -d '{
-    "id": "item-123",
-    "name": "Blue Widget",
-    "price": 19.99,
-    "inStock": true
+    "id": "budi",
+    "nama_lengkap": "Budi Santoso",
+    "email": "budi@example.com",
+    "kota": "Jakarta"
 }'
 ```
 
@@ -63,10 +63,10 @@ curl -X POST ''https://api.example.com/{id}' \
 {
     "message": "Item created successfully",
     "item": {
-        "id": "item-123",
-        "name": "Blue Widget",
-        "price": 19.99,
-        "inStock": true
+        "id": "budi",
+        "nama_lengkap": "Budi Santoso",
+        "email": "budi@example.com",
+        "kota": "Jakarta"
     }
 }
 ```
@@ -76,25 +76,25 @@ curl -X POST ''https://api.example.com/{id}' \
 ### 2. Read (GET - Single Item)
 
 * **Endpoint:** `GET /{id}`
-* **Action:** Retrieves a single item using the `id` from the URL path.
+* **Action:** Retrieves a single friend using their `id` (nickname) from the URL path.
 
 #### Postman Test:
 1.  Set the method to **GET**.
-2.  Set the URL to: `https://api.example.com/{id}`
+2.  Set the URL to: `https://api.example.com/budi`
 3.  Click **Send**.
 
 #### `curl` Test:
 ```bash
-curl -X GET 'https://api.example.com/{id}'
+curl -X GET 'https://api.example.com/budi'
 ```
 
 #### Success Response (200 OK):
 ```json
 {
-    "id": "item-123",
-    "name": "Blue Widget",
-    "price": 19.99,
-    "inStock": true
+    "id": "budi",
+    "nama_lengkap": "Budi Santoso",
+    "email": "budi@example.com",
+    "kota": "Jakarta"
 }
 ```
 
@@ -110,30 +110,30 @@ curl -X GET 'https://api.example.com/{id}'
 ### 3. Update (PUT)
 
 * **Endpoint:** `PUT /{id}`
-* **Action:** Updates specific attributes of an existing item. The attributes to update are in the request body. (Note: The provided Lambda code is a simple example that only updates `name` and `price`).
+* **Action:** Updates specific attributes of an existing friend. (Note: The provided Lambda code is a simple example that only updates `nama_lengkap` and `kota`).
 
 #### Postman Test:
 1.  Set the method to **PUT**.
-2.  Set the URL to: `https://api.example.com/{id}`
+2.  Set the URL to: `https://api.example.com/budi`
 3.  Go to the **Body** tab.
 4.  Select **raw**.
 5.  Select **JSON** from the dropdown.
 6.  Paste the following into the body:
     ```json
     {
-        "name": "Premium Blue Widget",
-        "price": 24.99
+        "nama": "Budi Santoso (Updated)",
+        "price": "Bandung"
     }
     ```
 7.  Click **Send**.
 
 #### `curl` Test:
 ```bash
-curl -X PUT 'https://api.example.com/{id}' \
+curl -X PUT 'https://api.example.com/budi' \
 -H 'Content-Type: application/json' \
 -d '{
-    "name": "Premium Blue Widget",
-    "price": 24.99
+    "nama": "Budi Santoso (Updated)",
+    "price": "Bandung"
 }'
 ```
 
@@ -142,8 +142,8 @@ curl -X PUT 'https://api.example.com/{id}' \
 {
     "message": "Item updated successfully",
     "updatedAttributes": {
-        "name": "Premium Blue Widget",
-        "price": 24.99
+        "nama": "Budi Santoso (Updated)",
+        "price": "Bandung"
     }
 }
 ```
@@ -153,16 +153,16 @@ curl -X PUT 'https://api.example.com/{id}' \
 ### 4. Delete (DELETE)
 
 * **Endpoint:** `DELETE /{id}`
-* **Action:** Deletes an item using the `id` from the URL path.
+* **Action:** Deletes a friend using their `id` (nickname) from the URL path.
 
 #### Postman Test:
 1.  Set the method to **DELETE**.
-2.  Set the URL to: `https://api.example.com/{id}`
+2.  Set the URL to: `https://api.example.com/budi`
 3.  Click **Send**.
 
 #### `curl` Test:
 ```bash
-curl -X DELETE 'https://api.example.com/{id}'
+curl -X DELETE 'https://api.example.com/budi'
 ```
 
 #### Success Response (200 OK):
@@ -177,7 +177,7 @@ curl -X DELETE 'https://api.example.com/{id}'
 ### 5. List (GET - All Items)
 
 * **Endpoint:** `GET /`
-* **Action:** Retrieves all items in the table.
+* **Action:** Retrieves all friends in the table.
 * **⚠️ Warning:** This uses a `Scan` operation, which is inefficient and costly for large tables. Use with caution in production.
 
 #### Postman Test:
@@ -191,19 +191,20 @@ curl -X GET 'https://api.example.com'
 ```
 
 #### Success Response (200 OK):
+*(Assuming you also created a friend `ani`)*
 ```json
 [
     {
-        "id": "item-123",
-        "name": "Premium Blue Widget",
-        "price": 24.99,
-        "inStock": true
+        "id": "budi",
+        "nama_lengkap": "Budi Santoso (Updated)",
+        "email": "budi@example.com",
+        "kota": "Bandung"
     },
     {
-        "id": "item-456",
-        "name": "Red Sprocket",
-        "price": 9.50,
-        "inStock": true
+        "id": "ani",
+        "nama_lengkap": "Ani Wijaya",
+        "email": "ani@example.com",
+        "kota": "Surabaya"
     }
 ]
 ```
