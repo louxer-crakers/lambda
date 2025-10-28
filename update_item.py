@@ -23,34 +23,54 @@ def lambda_handler(event, context):
         # Load the request body, converting numbers to Decimal
         body = json.loads(event.get('body', '{}'), parse_float=decimal.Decimal)
         
-        # This is a simple example that *only* updates 'name' and 'price'.
-        # A more complex function would dynamically build the UpdateExpression
-        # based on the keys present in the 'body'.
-        if 'name' not in body or 'price' not in body:
-             return {'statusCode': 400, 'body': json.dumps({'message': 'Error: "name" and "price" are required in the body for update'})}
+        # --- Start: Dynamic Update Logic ---
+        # We will build the UpdateExpression, Names, and Values dynamically
+        
+        update_expression_parts = []
+        expression_attribute_names = {}
+        expression_attribute_values = {}
+        
+        # Iterate over all key-value pairs in the request body
+        for key, value in body.items():
+            # --- English Explanation ---
+            # We must skip the primary key ('id'). 
+            # The 'id' is used in the 'Key' parameter, not in the 'UpdateExpression'.
+            if key != 'id':
+                # Create a placeholder for the attribute name (e.g., #nama)
+                attr_name_placeholder = f"#{key}"
+                # Create a placeholder for the attribute value (e.g., :nama)
+                attr_val_placeholder = f":{key}"
+                
+                # Add to our expression parts: "#nama = :nama"
+                update_expression_parts.append(f"{attr_name_placeholder} = {attr_val_placeholder}")
+                # Add to our names dict: {'#nama': 'nama'}
+                expression_attribute_names[attr_name_placeholder] = key
+                # Add to our values dict: {':nama': 'Budi (Updated)'}
+                expression_attribute_values[attr_val_placeholder] = value
 
-        # 'UpdateItem' is the most complex operation.
-        # - Key: Specifies *which* item to update.
-        # - UpdateExpression: Tells DynamoDB *what* to do. "set #n = :n" means
-        #   "set the attribute 'name' to the value ':n'".
-        # - ExpressionAttributeNames (#): A placeholder for attribute names.
-        #   This is needed if your attribute name is a reserved_word (like 'name').
-        # - ExpressionAttributeValues (:): A placeholder for attribute values.
-        #   This provides the actual data.
-        # - ReturnValues: Asks DynamoDB to return the *new* values of the attributes that were just updated.
+        # --- English Explanation ---
+        # Check if there is anything to update.
+        # If the body was empty or only contained an 'id', this list will be empty.
+        if not update_expression_parts:
+            return {
+                'statusCode': 400,
+                'body': json.dumps({'message': 'Error: Request body must contain attributes to update (excluding "id")'})
+            }
+
+        # --- English Explanation ---
+        # Join all parts into the final UpdateExpression string.
+        # e.g., "set #nama_lengkap = :nama_lengkap, #kota = :kota"
+        update_expression = "set " + ", ".join(update_expression_parts)
+
+        # Call the dynamic UpdateItem operation
         response = table.update_item(
             Key={'id': item_id},
-            UpdateExpression="set #n = :n, #p = :p",
-            ExpressionAttributeNames={
-                '#n': 'name',
-                '#p': 'price'
-            },
-            ExpressionAttributeValues={
-                ':n': body['name'],
-                ':p': body['price']
-            },
-            ReturnValues="UPDATED_NEW" 
+            UpdateExpression=update_expression,
+            ExpressionAttributeNames=expression_attribute_names,
+            ExpressionAttributeValues=expression_attribute_values,
+            ReturnValues="UPDATED_NEW"
         )
+        # --- End: Dynamic Update Logic ---
         
         return {
             'statusCode': 200,
