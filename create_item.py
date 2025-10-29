@@ -43,7 +43,12 @@ def lambda_handler(event, context):
         # Return a 201 Created status
         return {
             'statusCode': 201, 
-            'headers': {'Content-Type': 'application/json'},
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+                'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
+            },
             # Use cls=DecimalEncoder to convert any Decimals in the 'item' back to numbers for the JSON response
             'body': json.dumps({'message': 'Item created successfully', 'item': item}, cls=DecimalEncoder)
         }
@@ -52,5 +57,11 @@ def lambda_handler(event, context):
         # Generic error handler
         return {
             'statusCode': 500,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+                'Access-Control-Allow-Methods': 'GET,POST,OPTIONS'
+            },
             'body': json.dumps({'message': f'Internal server error: {str(e)}'})
         }

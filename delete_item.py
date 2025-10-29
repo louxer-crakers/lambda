@@ -25,12 +25,23 @@ def lambda_handler(event, context):
         # Return a 200 OK (or 204 No Content is also common)
         return {
             'statusCode': 200,
-            'headers': {'Content-Type': 'application/json'},
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+                'Access-Control-Allow-Methods': 'DELETE,GET,PUT,OPTIONS'
+            },
             'body': json.dumps({'message': 'Item deleted successfully'})
         }
         
     except Exception as e:
         return {
             'statusCode': 500,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+                'Access-Control-Allow-Methods': 'DELETE,GET,PUT,OPTIONS'
+            },
             'body': json.dumps({'message': f'Internal server error: {str(e)}'})
         }

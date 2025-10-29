@@ -32,18 +32,35 @@ def lambda_handler(event, context):
             # Use cls=DecimalEncoder to serialize the response.
             return {
                 'statusCode': 200,
-                'headers': {'Content-Type': 'application/json'},
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+                    'Access-Control-Allow-Methods': 'DELETE,GET,PUT,OPTIONS'
+                },
                 'body': json.dumps(response['Item'], cls=DecimalEncoder)
             }
         else:
             # If 'Item' key is not in the response, it means 404 Not Found.
             return {
                 'statusCode': 404,
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+                    'Access-Control-Allow-Methods': 'DELETE,GET,PUT,OPTIONS'
+                },
                 'body': json.dumps({'message': 'Item not found'})
             }
             
     except Exception as e:
         return {
             'statusCode': 500,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+                'Access-Control-Allow-Methods': 'DELETE,GET,PUT,OPTIONS'
+            },
             'body': json.dumps({'message': f'Internal server error: {str(e)}'})
         }
